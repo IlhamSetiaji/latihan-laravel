@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [BookController::class, 'index']);
-Route::get('/add-book', [BookController::class, 'addBook']);
-Route::post('/store-book', [BookController::class, 'storeBook']);
-Route::get('/edit/{bookID}/book', [BookController::class, 'editBook']);
-Route::post('/update/{bookID}/book', [BookController::class, 'updateBook']);
-Route::get('/delete/{bookID}/book', [BookController::class, 'deleteBook']);
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login', [UserController::class, 'storeLogin']);
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::post('/register', [UserController::class, 'storeRegister'])->name('register.store');
+Route::get('/otp/{id}', [UserController::class, 'viewOtp'])->name('otp');
+Route::post('/otp/{id}', [UserController::class, 'checkOtp'])->name('otp.verify');
+
+Route::middleware(['auth', 'account.verified'])->group(function () {
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+
+    Route::get('/', [BookController::class, 'index']);
+    Route::get('/add-book', [BookController::class, 'addBook']);
+    Route::post('/store-book', [BookController::class, 'storeBook']);
+    Route::get('/edit/{bookID}/book', [BookController::class, 'editBook']);
+    Route::post('/update/{bookID}/book', [BookController::class, 'updateBook']);
+    Route::get('/delete/{bookID}/book', [BookController::class, 'deleteBook']);
+});
