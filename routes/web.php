@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,10 @@ Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/register', [UserController::class, 'storeRegister'])->name('register.store');
 Route::get('/otp/{id}', [UserController::class, 'viewOtp'])->name('otp');
 Route::post('/otp/{id}', [UserController::class, 'checkOtp'])->name('otp.verify');
+Route::get('/forgot-password', [ResetPasswordController::class, 'index'])->name('password.request');
+Route::post('/forgot-password', [ResetPasswordController::class, 'findAccountByEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'resetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.update');
 
 Route::middleware(['auth', 'account.verified'])->group(function () {
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
